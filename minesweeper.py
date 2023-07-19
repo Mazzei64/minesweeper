@@ -22,12 +22,15 @@ class MineSweeper:
         self.__menuWindow.resizable(False, False)
         
         startButton = Button(self.__menuWindow, text="Start", width=8,height=1, fg="blue")
-        startButton.place(x=(8*8)+35,y=0)
+        startButton.place(x=(8*8)+35,y=90)
         optionsButton = Button(self.__menuWindow, text="Options", width=8,height=1, fg="blue")
-        optionsButton.place(x=(8*8)+35,y=35)
+        optionsButton.place(x=(8*8)+35,y=120)
+        closeButton = Button(self.__menuWindow, text="Exit", width=8,height=1, fg="blue")
+        closeButton.place(x=(8*8)+35,y=150)
 
         startButton.bind('<Button-1>', self.__StartGame)
         optionsButton.bind('<Button-1>', self.__OpenSettings)
+        closeButton.bind('<Button-1>', self.__on_closing)
 
         self.__menuWindow.protocol("WM_DELETE_WINDOW", self.__on_closing)
 
@@ -202,7 +205,7 @@ class MineSweeper:
         self.__gameWindow.destroy()
         self.__menuWindow.deiconify()
 
-    def __on_closing(self):
+    def __on_closing(self,event=None):
         self.__logger.close()
         self.__menuWindow.destroy()
 
