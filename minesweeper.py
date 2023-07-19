@@ -15,7 +15,7 @@ class MineSweeper:
         self.__buttonImage = None
         # self.__bt = Button(self.__screen, text="Start", width=1,height=1, fg="blue")
         # self.__bt.place(x=(300), y=(398))
-
+        
         self.__RenderMainMenu()
 
     def __RenderMainMenu(self):
@@ -24,6 +24,7 @@ class MineSweeper:
         self.__menuWindow.geometry(settings.MENU_SCREEN_SIZE)
         self.__menuWindow.eval('tk::PlaceWindow . center')
         self.__menuWindow.resizable(False, False)
+        # self.__buttonImage = PhotoImage('button-red.png')
         
         startButton = Button(self.__menuWindow, text="Start", width=8,height=1, fg="blue")
         startButton.place(x=(8*8)+35,y=0)
@@ -34,20 +35,17 @@ class MineSweeper:
         self.__menuWindow.configure()
 
     def __StartGame(self, event):
-        # self.__menuWindowConfig = self.__menuWindow.config()
-        self.__menuWindow.destroy()
-        # print(self.__menuWindowConfig)
+        self.__menuWindow.withdraw()
         self.__RenderGameWindow()
 
     def __RenderGameWindow(self):
-        self.__gameWindow = Tk()
+        self.__gameWindow = Toplevel(self.__menuWindow)
         self.__gameWindow.title("Minesweeper")
-        self.__gameWindow.geometry(settings.IN_GAME_SCREEN_SIZE)
-        self.__gameWindow.eval('tk::PlaceWindow . center')
+        self.__gameWindow.geometry(settings.IN_GAME_SCREEN_SIZE)        
         self.__gameWindow.resizable(False, False)
-        self.__buttonImage = PhotoImage(file='images/light-red-button.png')
-        self.__buttonImage.configure(width=30, height=30)
-        # self.__buttonImage.zoom(x=30, y=30)
+        x = self.__menuWindow.winfo_x()
+        y = self.__menuWindow.winfo_y()
+        self.__gameWindow.geometry("+%d+%d" %(x,y))
 
         headerFrame = frame = Frame(
             self.__gameWindow,
@@ -81,25 +79,40 @@ class MineSweeper:
                 )
 
         Cell.randomize_mines()
-
-        bt = Button(
+      
+        restartButton = Label(
             headerFrame,
-            image=self.__buttonImage,
-            width=30,
-            height=30,
-            borderwidth=0
-            # wraplength=1,
-            # bg='black',
-            # fg='red',
-            # activebackground='black',
-            # activeforeground='red',
-            # bd='0',
-            
+            width=3,
+            height=1,
+            relief='raised',
+            font=("Arial", 14),
+            text='⚫',
+            bg='black',
+            fg='red'
             )
-        bt.place(x=140, y=10)
-        # bt = RoundedButton(headerFrame, width=30, height=30, cornerradius=15,padding=1, color='red', bg='white', command=self.RestartGame) 
-        # bt.place(x=140, y=10)
-        bt.bind('<Button-1>', self.RestartGame)
+        
+        quitButton = Label(
+            headerFrame,
+            width=4,
+            height=1,
+            relief='raised',
+            font=("Arial", 12),
+            text='exit',
+            bg='black',
+            fg='red',
+            borderwidth=0
+        )
+
+        quitButton.place(x=180, y=15)
+        restartButton.place(x=100, y=15)
+        
+        quitButton.bind('<Enter>', self.__OverButton)
+        quitButton.bind('<Leave>', self.__OffButton)
+        quitButton.bind('<Button-1>', self.__ExitGame)
+
+        restartButton.bind('<Enter>', self.__OverButton)
+        restartButton.bind('<Leave>', self.__OffButton)
+        restartButton.bind('<Button-1>', self.__RestartGame)
 
         Cell.create_score_label(headerFrame)
         Cell.global_socore_label_obj.place(
@@ -107,10 +120,25 @@ class MineSweeper:
             y=15
         )
 
-        self.__gameWindow.mainloop()
+        self.__gameWindow.protocol("WM_DELETE_WINDOW", self.__on_closing)
+        # self.__gameWindow.mainloop()
 
-    def RestartGame(self, event):
+    def __OverButton(self, event):
+        event.widget.configure(relief='sunken')
+        event.widget.configure(bg='red', fg='black')
+
+    def __OffButton(self, event):
+        event.widget.configure(relief='raised')
+        event.widget.configure(bg='black', fg='red')
+
+    def __RestartGame(self, event):
         Cell.refresh()
+
+    def __ExitGame(self, event):
+        self.__menuWindow.destroy()
+
+    def __on_closing(self):
+        self.__menuWindow.destroy()
 
     def Run(self):
         self.__menuWindow.mainloop()
