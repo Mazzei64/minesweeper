@@ -1,6 +1,5 @@
 from tkinter import Button, Label
 import random
-import settings
 
 class Cell:
     cells_list = []
@@ -113,10 +112,10 @@ class Cell:
         self.cell_btn_object.configure(bg='red')
 
     @staticmethod
-    def randomize_mines():
+    def randomize_mines(rule):
         shuffled_cells = random.sample(
             Cell.cells_list,
-            settings.MINE_COUNT
+            rule.MINE_COUNT
         )
         for cell in shuffled_cells:
             cell.is_mine = True
@@ -139,6 +138,12 @@ class Cell:
                 bg='gray85',
                 text=' '
             )
+        Cell.global_score = 0
+        Cell.global_socore_label_obj.configure(text=f"SCORE: {Cell.global_score}")
+
+    @staticmethod
+    def flushCells():
+        Cell.cells_list.clear()
         Cell.global_score = 0
         Cell.global_socore_label_obj.configure(text=f"SCORE: {Cell.global_score}")
 
