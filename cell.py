@@ -107,7 +107,6 @@ class Cell:
             if cell.is_mine:
                 cell.cell_btn_object.configure(bg='orange')
                 cell.cell_btn_object["state"] = "disabled"
-                print(cell.cell_btn_object["state"])
             else:  
                 cell.show_cell()
             
@@ -121,8 +120,6 @@ class Cell:
         )
         for cell in shuffled_cells:
             cell.is_mine = True
-
-        print(shuffled_cells)
 
     @staticmethod
     def create_score_label(position):

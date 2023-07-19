@@ -11,10 +11,6 @@ class MineSweeper:
     def __init__(self):
         self.__gameWindow = None
         self.__menuWindow = None
-        self.__menuWindowConfig = None
-        self.__buttonImage = None
-        # self.__bt = Button(self.__screen, text="Start", width=1,height=1, fg="blue")
-        # self.__bt.place(x=(300), y=(398))
         
         self.__RenderMainMenu()
 
@@ -24,7 +20,6 @@ class MineSweeper:
         self.__menuWindow.geometry(settings.MENU_SCREEN_SIZE)
         self.__menuWindow.eval('tk::PlaceWindow . center')
         self.__menuWindow.resizable(False, False)
-        # self.__buttonImage = PhotoImage('button-red.png')
         
         startButton = Button(self.__menuWindow, text="Start", width=8,height=1, fg="blue")
         startButton.place(x=(8*8)+35,y=0)
@@ -96,15 +91,15 @@ class MineSweeper:
             width=4,
             height=1,
             relief='raised',
-            font=("Arial", 12),
+            font=("Arial", 15),
             text='exit',
             bg='black',
             fg='red',
-            borderwidth=0
+            borderwidth=1
         )
 
-        quitButton.place(x=180, y=15)
-        restartButton.place(x=100, y=15)
+        quitButton.place(x=settings.IN_GAME_EXIT_BUTTON_X, y=11)
+        restartButton.place(x=settings.IN_GAME_RESTART_BUTTON_X, y=15)
         
         quitButton.bind('<Enter>', self.__OverButton)
         quitButton.bind('<Leave>', self.__OffButton)
@@ -121,7 +116,6 @@ class MineSweeper:
         )
 
         self.__gameWindow.protocol("WM_DELETE_WINDOW", self.__on_closing)
-        # self.__gameWindow.mainloop()
 
     def __OverButton(self, event):
         event.widget.configure(relief='sunken')
@@ -135,7 +129,8 @@ class MineSweeper:
         Cell.refresh()
 
     def __ExitGame(self, event):
-        self.__menuWindow.destroy()
+        self.__gameWindow.destroy()
+        self.__menuWindow.deiconify()
 
     def __on_closing(self):
         self.__menuWindow.destroy()
