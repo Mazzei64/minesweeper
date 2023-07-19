@@ -6,12 +6,14 @@ class Cell:
     global_socore_label_obj = None
     global_score = 0
     game_over = False
+    game_rule = None
 
-    def __init__(self, x, y, is_mine=False):
+    def __init__(self, x, y, logger,is_mine=False):
         self.is_mine = is_mine
         self.is_open = False
         self.is_flagged = False
         self.cell_btn_object = None
+        self.__logger = logger
         self.x = x
         self.y = y
 
@@ -31,6 +33,7 @@ class Cell:
 
     def left_click(self,event):
         if self.is_mine:
+            self.__logger.LogAction(f"Game Over with Total Score of {self.global_score}.")
             self.show_mine()
             return
         
@@ -46,12 +49,14 @@ class Cell:
                 self.is_open = True
                 Cell.global_score = Cell.global_score + 1
                 Cell.global_socore_label_obj.configure(text=f"SCORE: {Cell.global_score}")
-                return
-
-            self.show_cell()
-            self.is_open = True
-            Cell.global_score = Cell.global_score + 1
-            Cell.global_socore_label_obj.configure(text=f"SCORE: {Cell.global_score}")
+            else:
+                self.show_cell()
+                self.is_open = True
+                Cell.global_score = Cell.global_score + 1
+                Cell.global_socore_label_obj.configure(text=f"SCORE: {Cell.global_score}")
+        
+        if self.global_score == (Cell.game_rule.CELL_COUNT - Cell.game_rule.MINE_COUNT):
+            self.__logger.LogAction(f"Game Win! Total Score of {self.global_score}.")
     
     def right_click(self,event):
         if not self.is_flagged:

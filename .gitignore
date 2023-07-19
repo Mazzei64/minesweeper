@@ -3,3 +3,4 @@ main*
 roundedbutton.py
 __pycache__/
 *.png
+*.txt

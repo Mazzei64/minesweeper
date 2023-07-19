@@ -1,13 +1,16 @@
 from cell import Cell
+from logger import Logger
 from rules import Rule
 from tkinter import *
 
 
 class MineSweeper:
-    def __init__(self, rule=Rule()):
+    def __init__(self, rule=Rule(), logger=Logger()):
         self.__gameWindow = None
         self.__menuWindow = None
         self.__rule_obj = rule
+        self.__logger = logger
+        Cell.game_rule = self.__rule_obj
 
         self.__RenderMainMenu()
 
@@ -26,11 +29,15 @@ class MineSweeper:
         startButton.bind('<Button-1>', self.__StartGame)
         optionsButton.bind('<Button-1>', self.__OpenSettings)
 
+        self.__menuWindow.protocol("WM_DELETE_WINDOW", self.__on_closing)
+
     def __OpenSettings(self, event):
+        self.__logger.LogAction('In settings.')
         self.__menuWindow.withdraw()
         self.__RenderSettingsWindow()
 
     def __StartGame(self, event):
+        self.__logger.LogAction('Game has started.')
         self.__menuWindow.withdraw()
         self.__RenderGameWindow()
     
@@ -80,16 +87,20 @@ class MineSweeper:
 
     def __SettingsOptionSelect(self,event):
         if self.__optionSelected.get() == 1:
+            self.__logger.LogAction('Selected easy difficulty.')
             self.__rule_obj.SetGridSize(6)
         elif self.__optionSelected.get() == 2:
+            self.__logger.LogAction('Selected normal difficulty.')
             self.__rule_obj.SetGridSize(8)
         elif self.__optionSelected.get() == 3:
+            self.__logger.LogAction('Selected hard difficulty.')
             self.__rule_obj.SetGridSize(12)
 
         self.__menuWindow.deiconify()
         self.__settingsWindow.destroy()
         
     def __RenderGameWindow(self):
+        self.__logger.LogAction('Playing game.')
         self.__gameWindow = Toplevel(self.__menuWindow)
         self.__gameWindow.title("Minesweeper")
         self.__gameWindow.geometry(self.__rule_obj.IN_GAME_SCREEN_SIZE)        
@@ -122,7 +133,7 @@ class MineSweeper:
 
         for x in range(self.__rule_obj.GRID_SIZE):
             for y in range(self.__rule_obj.GRID_SIZE):
-                cell = Cell(x,y)
+                cell = Cell(x,y, self.__logger)
                 cell.create_btn_object(frame)
                 cell.cell_btn_object.grid(
                     column=x,
@@ -182,14 +193,17 @@ class MineSweeper:
         event.widget.configure(bg='black', fg='red')
 
     def __RestartGame(self, event):
+        self.__logger.LogAction('Game restarted.')
         Cell.refresh()
 
     def __ExitGame(self, event):
+        self.__logger.LogAction('Game Exited.')
         Cell.flushCells()
         self.__gameWindow.destroy()
         self.__menuWindow.deiconify()
 
     def __on_closing(self):
+        self.__logger.close()
         self.__menuWindow.destroy()
 
     def Run(self):
