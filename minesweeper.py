@@ -1,18 +1,12 @@
 from cell import Cell
 from rules import Rule
-import settings
-import images
-from roundedbutton import RoundedButton
-
 from tkinter import *
-from tkinter import ttk
 
 
 class MineSweeper:
     def __init__(self, rule=Rule()):
         self.__gameWindow = None
         self.__menuWindow = None
-        self.__selectedDifficulty = 1
         self.__rule_obj = rule
 
         self.__RenderMainMenu()
@@ -53,7 +47,6 @@ class MineSweeper:
         
         settingsBody = Frame(
             self.__settingsWindow,
-            # bg='red',
             width = self.__rule_obj.IN_GAME_BODY_WIDTH,
             height= self.__rule_obj.IN_GAME_BODY_HEIGHT
         )
@@ -62,7 +55,6 @@ class MineSweeper:
         caption = Label(settingsBody,text='Select Difficulty:', font=('Arial',14))
         caption.pack(anchor=W, ipady=10)
         
-        # self.__optionSelected = IntVar()
         self.__optionSelected = IntVar()
 
         if self.__rule_obj.GRID_SIZE == 6:
