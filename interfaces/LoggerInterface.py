@@ -7,6 +7,12 @@ class LoggerInterface:
         pass   
     
     '''
+        Method responsible for logging when application initializes.
+    '''
+    def LogGameStart(self):
+        pass
+
+    '''
         Method responsible for logging entry.
     '''
     def LogWrite(self, log):
@@ -17,3 +23,10 @@ class LoggerInterface:
     '''
     def CreateLoggingFile(self, filename, filePath):
         pass
+
+    '''
+        Method responsible for handling closing of current file descriptor object
+        and logging when application closes.
+    '''
+    def close(self):
+        pass  
