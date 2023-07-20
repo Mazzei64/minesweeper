@@ -1,10 +1,10 @@
+from interfaces.MineSweeperInterface import MineSweeperInterface
 from cell import Cell
 from logger import Logger
 from rules import Rule
 from tkinter import *
 
-
-class MineSweeper:
+class MineSweeper(MineSweeperInterface):
     def __init__(self, rule=Rule(), logger=Logger()):
         self.__gameWindow = None
         self.__menuWindow = None

@@ -1,7 +1,9 @@
-import os
+from interfaces.LoggerInterface import LoggerInterface
 from datetime import date, datetime
+import os
 
-class Logger:
+
+class Logger(LoggerInterface):
 
     def __init__(self):
         self.__log_file = None

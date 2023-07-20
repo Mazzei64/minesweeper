@@ -1,6 +1,7 @@
+from interfaces.RulesInterface import RulesInterface
 import settings
 
-class Rule:
+class Rule(RulesInterface):
 
     def __init__(self, grid_size=settings.GRID_SIZE):
         self.GRID_PADDING = settings.GRID_PADDING

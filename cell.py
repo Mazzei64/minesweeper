@@ -1,7 +1,8 @@
+from interfaces.CellInterface import CellInterface
 from tkinter import Button, Label
 import random
 
-class Cell:
+class Cell(CellInterface):
     cells_list = []
     global_socore_label_obj = None
     global_score = 0
